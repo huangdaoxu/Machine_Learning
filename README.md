@@ -1,2 +1,3 @@
-# Machine_Learning
-# Machine_Learning
+# 机器学习模型编写
+
+本人平时构建机器学习模型时使用开源框架比较多，为了练练手，特地创建该repository实现各类热门机器学习模型。
