@@ -58,7 +58,7 @@ class NeuralNetworkClassifer(object):
         for i in xrange(len(label)):
             output_error[i] = label_[i] * (1-label_[i]) * (label[i] - label_[i])
         #隐藏层残差
-        hidden_error = [0.0] * len()
+        #未完待续
     
     def predict(self,feature):
         #输入层前向传导到第二层的计算结果
