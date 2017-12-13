@@ -10,14 +10,7 @@ import numpy as np
 from operator import itemgetter
 
 
-def item_similarity():
-    data = [('a',101,1),('a',111,1),('a',141,0), 
-                ('b',111,0),('b',151,1),('b',131,0), 
-                ('c',121,1),('c',161,0),('c',141,0), 
-                ('d',111,1),('d',161,1),('d',141,0),('d',121,0), 
-                ('e',131,1),('e',151,0),('e',171,0),
-                ('f',181,0),('f',191,1),
-                ('g',101,1),('g',201,0)]
+def item_similarity(data):
     data = pd.DataFrame(np.array(data))
     data.columns = ['openid', 'productid', 'status']
     data['status'] = data['status'].astype(int)
@@ -39,8 +32,8 @@ def item_similarity():
     return np.array(W), product_list, data
 
 
-def recommendation(K):
-    W, product_list, data = item_similarity()
+def recommendation(K, data):
+    W, product_list, data = item_similarity(data)
     rank = []
     for openid in data['openid'].unique():
         for i in xrange(len(product_list)):

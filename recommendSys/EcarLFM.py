@@ -25,17 +25,11 @@ class LatentFactorModel(object):
         self._c = c
         self._iteration_counts = iteration_counts
 
-    def _getData(self):
+    def _getData(self, data):
         """
+        data中每个tuple的第三项数据不用管，也就是pandas中dataframe的status列不用理会
         :return: 商品浏览记录总数据
         """
-        data = [('a',101,1),('a',111,1),('a',141,0), 
-                ('b',111,0),('b',151,1),('b',131,0), 
-                ('c',121,1),('c',161,0),('c',141,0), 
-                ('d',111,1),('d',161,1),('d',141,0),('d',121,0), 
-                ('e',131,1),('e',151,0),('e',171,0),
-                ('f',181,0),('f',191,1),
-                ('g',101,1),('g',201,0)]
         data = pd.DataFrame(np.array(data))
         data.columns = ['openid', 'productid', 'status']
         return data
@@ -103,13 +97,12 @@ class LatentFactorModel(object):
         r = self.sigmod(r)
         return r
 
-    def train(self):
-        data = self._getData()
+    def train(self, data):
+        data = self._getData(data)
         p, q, userItem = self._initParams(data)
-
         for step in xrange(1, self._iteration_counts+1):
             for openid, samples in userItem.items():
-                for productid, r in samples:
+                for productid, r in samples.items():
                     loss = r - self.predict(p, q, openid, productid)
                     for f in xrange(0, self._f):
                         print('step %d openid %s class %d loss %f' % (step, openid, f, np.abs(loss)))
@@ -125,7 +118,6 @@ class LatentFactorModel(object):
             for productid in data['productid'].unique():
                 rank.append((openid, productid, self.predict(p, q, openid, productid)))
         return rank
-
 
 
 
