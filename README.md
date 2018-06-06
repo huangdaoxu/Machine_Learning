@@ -9,3 +9,5 @@ ocr_lstmctc_tensorflow 为使用（python 2.7.14 | tensorflow version1.4）实�
 recommendSys 是一个以numpy为基础编写的推荐系统，分别为基于用户的协同过滤、基于物品的协同过滤、LFM模型，以隐性反馈数据为基础（显性反馈数据同样适用这些模型）。LFM模型说明链接如下：http://www.jianshu.com/p/9270edf4b08b 。
 
 autoencoder为自编码模型，它属于非监督学习，该模型常用于提取有效特征以及降低特征维度（作用与PCA降维类似），需要注意的一点是，对于激活函数的选取非常重要，在不同的特征集上需要找到最合适的激活函数。
+
+Linear Discriminant Analysis使用（python3.6 | numpy1.14）环境编写的线性判别分析模型，核心为通过特征值与特征向量来做变换，而sklearn中有三种kernel。它属于监督学习方式的特征降维，而PCA是非监督学习。
