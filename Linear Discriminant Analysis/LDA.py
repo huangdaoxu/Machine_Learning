@@ -64,6 +64,5 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 lda = LinearDiscriminantAnalysis(solver='eigen', n_components=2)
 lda.fit(X,y)
 X_new = lda.transform(X)
-print(X_new.shape)
 plt.scatter(X_new[:, 0], X_new[:, 1],marker='o',c=y)
 plt.show()
