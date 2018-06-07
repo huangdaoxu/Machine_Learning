@@ -48,7 +48,7 @@ class LDA(object):
         class_count = len(set(y))
         if self.n_components < class_count:
             w = self._lda(x, y)
-            new_X = np.dot(X, w)[:, :2]
+            new_X = np.dot(X, w)[:, :self.n_components]
         else:
             raise ValueError('n_components must less than class count.')
         return new_X
