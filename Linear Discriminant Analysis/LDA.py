@@ -57,7 +57,6 @@ class LDA(object):
 if __name__ == '__main__':
     data_set = load_iris()
     X, y = data_set.data, data_set.target
-
     lda = LDA(n_components=2)
     new_X = lda.transform(X, y)
     plt.scatter(new_X[:, 0], new_X[:, 1],marker='o',c=y)
