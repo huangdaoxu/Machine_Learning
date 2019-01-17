@@ -13,3 +13,5 @@ autoencoder使用（python 2.7.13 | tensorflow version1.2）实现的自编码�
 Linear Discriminant Analysis使用（python3.6 | numpy1.14）实现的线性判别分析模型，核心通过特征值分解实现，而sklearn中有三种kernel。它属于监督学习方式的特征降维，而PCA是非监督学习。理论知识及公式基于周志华老师的机器学习书籍。
 
 Principal components analysis使用（python3.6 | numpy1.14）实现的主成分分析模型，核心通过特征值分解与奇异值分解实现。
+
+malicous_url_detection（python3.6 | tensorflow 1.8 | gensim）异常url检测（web攻击检测）lstm+dynamic_rnn+gensim中word2vec。
