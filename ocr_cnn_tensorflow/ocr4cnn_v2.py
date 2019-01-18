@@ -1,4 +1,4 @@
-from common.tool.ocr4_util import *
+from ocr4_util import *
 
 
 class Ocr4LenCnnModel(object):

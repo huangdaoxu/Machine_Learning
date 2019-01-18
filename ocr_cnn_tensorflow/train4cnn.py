@@ -1,7 +1,7 @@
 import argparse
 import logging
 
-from model.ocr4cnn_v1 import Ocr4LenCnnModel
+from ocr4cnn_v2 import Ocr4LenCnnModel
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
