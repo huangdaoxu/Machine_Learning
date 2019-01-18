@@ -42,8 +42,11 @@ class Char2Vec(object):
 
     def write_vocab(self, vocab_file, vocab_vector_file):
         vector = []
-        with open(vocab_file, mode='w+') as f:
+        with open(vocab_file, mode='w+', encoding='utf-8') as f:
             for k in self._model.wv.vocab:
+                # 删除空格等操作符
+                if k.strip() == '':
+                    continue
                 f.write(k + '\n')
                 vector.append(self.transform(k))
         np.save(vocab_vector_file, np.array(vector))

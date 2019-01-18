@@ -48,7 +48,9 @@ class Rnn_Net(object):
                                  activation=None, kernel_regularizer=regularizer)
         print(logits.get_shape())
 
-        self.y_pred = tf.argmax(logits, 1)
+        self.y_pred = tf.cast(tf.argmax(logits, 1), tf.int32)
+
+        self.accurancy = tf.reduce_mean(tf.cast(tf.equal(self.y_pred, target_input), tf.float32))
 
         tf.losses.sparse_softmax_cross_entropy(labels=target_input, logits=logits)
         self.loss = tf.losses.get_total_loss(add_regularization_losses=True, name='total_loss')
@@ -79,16 +81,23 @@ def train(net, iterator, sess):
     while True:
         if current_epoch > FLAGS.epoch: break
         sess.run(iterator.initializer)
+        loss = []
+        accurancy = []
         while True:
             try:
-                losses, _ = sess.run([net.loss, net.train_op])
-                print('train loss :', losses)
+                losses, acc, _ = sess.run([net.loss, net.accurancy, net.train_op])
+                loss.append(losses)
+                accurancy.append(acc)
             except tf.errors.OutOfRangeError:
+                print('current_epoch :{}, train loss :{}, accurancy :{}').format(
+                    current_epoch,
+                    sum(loss)/len(loss),
+                    sum(accurancy)/len(accurancy),
+                )
                 break
         if current_epoch % 10 == 0:
             saver.save(sess, FLAGS.model_path + 'points', global_step=current_epoch)
 
         current_epoch += 1
         sess.run(tf.assign(net.global_step, current_epoch))
-        print('current_epoch', current_epoch)
 

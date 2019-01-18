@@ -22,13 +22,13 @@ def create_vocab_tables(file):
 
 
 def get_vocab_size(file):
-    with open(file) as f:
+    with open(file, encoding='utf-8') as f:
         count = len(f.readlines())
     return count
 
 
 def get_num_classes(file):
-    with open(file) as f:
+    with open(file, encoding='utf-8') as f:
         count = len(set([i.strip('\n') for i in f.readlines()]))
     return count
 
@@ -49,12 +49,12 @@ def parse_http_request(http_req_list):
 
 def write_src_tgt(src_list, tgt_list, src_file, tgt_file):
     char_list = [[j for j in i] for i in src_list]
-    with open(src_file, mode='w+') as f:
+    with open(src_file, mode='w+', encoding='utf-8') as f:
         for i in char_list:
             f.write(' '.join(i) + '\n')
         src_lines = len(f.readlines())
 
-    with open(tgt_file, mode='w+') as f:
+    with open(tgt_file, mode='w+', encoding='utf-8') as f:
         for i in tgt_list:
             f.write(str(i) + '\n')
         tgt_lines = len(f.readlines())
