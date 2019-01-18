@@ -1,4 +1,4 @@
-from common.tool.ctc_util import *
+from ctc_util import *
 
 
 class OcrLstmCtc(object):
