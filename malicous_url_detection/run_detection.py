@@ -15,5 +15,5 @@ if __name__ == '__main__':
     )
 
     with tf.Session() as sess:
-        train(net, iterator, sess)
+        train(net, sess)
 

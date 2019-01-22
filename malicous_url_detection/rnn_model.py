@@ -68,7 +68,7 @@ class Rnn_Net(object):
         return cell
 
 
-def train(net, iterator, sess):
+def train(net, sess):
     sess.run(tf.global_variables_initializer())
     tf.tables_initializer().run()
 
@@ -80,24 +80,43 @@ def train(net, iterator, sess):
     current_epoch = sess.run(net.global_step)
     while True:
         if current_epoch > FLAGS.epoch: break
-        sess.run(iterator.initializer)
-        loss = []
-        accurancy = []
+        sess.run(net.iterator.initializer,
+                 feed_dict={net.iterator.input_source_file: FLAGS.train_src_file,
+                            net.iterator.input_target_file: FLAGS.train_tgt_file})
         while True:
             try:
-                losses, acc, _ = sess.run([net.loss, net.accurancy, net.train_op])
-                loss.append(losses)
-                accurancy.append(acc)
+                sess.run(net.train_op)
             except tf.errors.OutOfRangeError:
-                print('current_epoch :{}, train loss :{}, accurancy :{}'.format(
-                    current_epoch,
-                    sum(loss)/len(loss),
-                    sum(accurancy)/len(accurancy),
-                ))
                 break
+        check_accurancy(sess, net, FLAGS.train_src_file,
+                        FLAGS.train_tgt_file, current_epoch, 'train')
+        check_accurancy(sess, net, FLAGS.test_src_file,
+                        FLAGS.test_tgt_file, current_epoch, 'test')
         if current_epoch % 10 == 0:
             saver.save(sess, FLAGS.model_path + 'points', global_step=current_epoch)
 
         current_epoch += 1
         sess.run(tf.assign(net.global_step, current_epoch))
+
+
+def check_accurancy(sess, net, src_file, tgt_file, current_epoch, file_type):
+    sess.run(net.iterator.initializer,
+             feed_dict={net.iterator.input_source_file: src_file,
+                        net.iterator.input_target_file: tgt_file})
+    loss = []
+    accurancy = []
+    while True:
+        try:
+            losses, acc = sess.run([net.loss, net.accurancy])
+            loss.append(losses)
+            accurancy.append(acc)
+        except tf.errors.OutOfRangeError:
+            print('data type :{}, current_epoch :{}, loss :{}, accurancy :{}'.format(
+                file_type,
+                current_epoch,
+                sum(loss) / len(loss),
+                sum(accurancy) / len(accurancy),
+            ))
+            break
+
 

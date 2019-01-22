@@ -11,7 +11,9 @@ class BatchedInput(collections.namedtuple("BatchedInput",
                                           ("initializer",
                                            "source",
                                            "target_input",
-                                           "source_sequence_length"))):
+                                           "source_sequence_length",
+                                           "input_source_file",
+                                           "input_target_file"))):
     pass
 
 
@@ -92,14 +94,16 @@ def load_word2vec_embedding(vocab_size, embeddings_size):
 
 def get_iterator(batch_size, buffer_size=None, random_seed=None,
                  num_threads=4, src_max_len=FLAGS.num_steps, num_buckets=5):
+    input_source_file = tf.placeholder(dtype=tf.string, shape=None, name="input_source_file")
+    input_target_file = tf.placeholder(dtype=tf.string, shape=None, name="input_target_file")
     vocab_table = create_vocab_tables(FLAGS.vocab_file)
     vocab_size = get_vocab_size(FLAGS.vocab_file)
 
     if buffer_size is None:
         buffer_size = batch_size * 5
 
-    src_dataset = tf.data.TextLineDataset(FLAGS.train_src_file)
-    tgt_dataset = tf.data.TextLineDataset(FLAGS.train_tgt_file)
+    src_dataset = tf.data.TextLineDataset(input_source_file)
+    tgt_dataset = tf.data.TextLineDataset(input_target_file)
     src_tgt_dataset = tf.data.Dataset.zip((src_dataset, tgt_dataset))
 
     src_tgt_dataset = src_tgt_dataset.shuffle(
@@ -173,18 +177,24 @@ def get_iterator(batch_size, buffer_size=None, random_seed=None,
         initializer=batched_iter.initializer,
         source=src_ids,
         target_input=tgt_ids,
-        source_sequence_length=src_seq_len)
+        source_sequence_length=src_seq_len,
+        input_source_file=input_source_file,
+        input_target_file=input_target_file)
 
 
+"""
+Just for testing
+"""
 if __name__ == '__main__':
-    #################### Just for testing #########################
-    iterator = get_iterator(batch_size=6, random_seed=666)
+    iterator = get_iterator(batch_size=2, random_seed=666)
 
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
         tf.tables_initializer().run()
         for i in range(1):
-            sess.run(iterator.initializer)
+            sess.run(iterator.initializer,
+                     feed_dict={iterator.input_source_file: FLAGS.train_src_file,
+                                iterator.input_target_file: FLAGS.train_tgt_file})
             while True:
                 try:
                     source, target_input, source_sequence_length = \
