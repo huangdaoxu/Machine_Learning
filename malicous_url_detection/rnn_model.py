@@ -89,11 +89,11 @@ def train(net, iterator, sess):
                 loss.append(losses)
                 accurancy.append(acc)
             except tf.errors.OutOfRangeError:
-                print('current_epoch :{}, train loss :{}, accurancy :{}').format(
+                print('current_epoch :{}, train loss :{}, accurancy :{}'.format(
                     current_epoch,
                     sum(loss)/len(loss),
                     sum(accurancy)/len(accurancy),
-                )
+                ))
                 break
         if current_epoch % 10 == 0:
             saver.save(sess, FLAGS.model_path + 'points', global_step=current_epoch)
