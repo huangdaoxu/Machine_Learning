@@ -88,10 +88,8 @@ def train(net, sess):
                 sess.run(net.train_op)
             except tf.errors.OutOfRangeError:
                 break
-        check_accurancy(sess, net, FLAGS.train_src_file,
-                        FLAGS.train_tgt_file, current_epoch, 'train')
-        check_accurancy(sess, net, FLAGS.test_src_file,
-                        FLAGS.test_tgt_file, current_epoch, 'test')
+        check_accurancy(sess, net, current_epoch, 'train')
+        check_accurancy(sess, net, current_epoch, 'test')
         if current_epoch % 10 == 0:
             saver.save(sess, FLAGS.model_path + 'points', global_step=current_epoch)
 
@@ -99,7 +97,9 @@ def train(net, sess):
         sess.run(tf.assign(net.global_step, current_epoch))
 
 
-def check_accurancy(sess, net, src_file, tgt_file, current_epoch, file_type):
+def check_accurancy(sess, net, current_epoch, op_type):
+    src_file = FLAGS.train_src_file if op_type == 'train' else FLAGS.test_src_file
+    tgt_file = FLAGS.train_tgt_file if op_type == 'train' else FLAGS.test_tgt_file
     sess.run(net.iterator.initializer,
              feed_dict={net.iterator.input_source_file: src_file,
                         net.iterator.input_target_file: tgt_file})
@@ -107,12 +107,12 @@ def check_accurancy(sess, net, src_file, tgt_file, current_epoch, file_type):
     accurancy = []
     while True:
         try:
-            losses, acc = sess.run([net.loss, net.accurancy])
-            loss.append(losses)
+            los, acc = sess.run([net.loss, net.accurancy])
+            loss.append(los)
             accurancy.append(acc)
         except tf.errors.OutOfRangeError:
             print('data type :{}, current_epoch :{}, loss :{}, accurancy :{}'.format(
-                file_type,
+                op_type,
                 current_epoch,
                 sum(loss) / len(loss),
                 sum(accurancy) / len(accurancy),
