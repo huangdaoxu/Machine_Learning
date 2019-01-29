@@ -117,8 +117,8 @@ def check_accurancy(sess, net, current_epoch, op_type):
             pred_value.extend(np.squeeze(pv).tolist())
             true_value.extend(np.squeeze(tv).tolist())
         except tf.errors.OutOfRangeError:
-            print('data type :{}, current_epoch :{}, loss :{}, accurancy :{}'
-                  'false positive rate :{}, false negative rate :{}'.format(
+            print('data type :{}, current_epoch :{}, loss :{:.3}, accurancy :{:.3}, '
+                  'false positive rate :{:.3}, false negative rate :{:.3}'.format(
                    op_type,
                    current_epoch,
                    sum(loss) / len(loss),
