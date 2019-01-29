@@ -12,8 +12,9 @@ if __name__ == "__main__":
     print(primary_df['request_url'].str.len())
     target_list = primary_df['status'].values.tolist()
     source_list = parse_http_request(source_list)
-    source_list = write_src_tgt(source_list, target_list, './source.txt', './target.txt')
-    print(source_list)
+    source_list = write_src_tgt(source_list, target_list,
+                                FLAGS.train_src_file, FLAGS.train_tgt_file)
+
     model = Char2Vec(size=32, window=5, min_count=1, workers=2, iter=5)
     model_path = FLAGS.word2vec_model_path
     if os.path.exists(model_path):

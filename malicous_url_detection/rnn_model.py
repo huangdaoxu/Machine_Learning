@@ -1,4 +1,5 @@
 from utils import *
+from sklearn.metrics import confusion_matrix
 
 
 class Rnn_Net(object):
@@ -105,18 +106,38 @@ def check_accurancy(sess, net, current_epoch, op_type):
                         net.iterator.input_target_file: tgt_file})
     loss = []
     accurancy = []
+    pred_value = []
+    true_value = []
     while True:
         try:
-            los, acc = sess.run([net.loss, net.accurancy])
+            los, acc, pv, tv = sess.run([net.loss, net.accurancy,
+                                         net.y_pred, net.iterator.target_input])
             loss.append(los)
             accurancy.append(acc)
+            pred_value.extend(np.squeeze(pv).tolist())
+            true_value.extend(np.squeeze(tv).tolist())
         except tf.errors.OutOfRangeError:
-            print('data type :{}, current_epoch :{}, loss :{}, accurancy :{}'.format(
-                op_type,
-                current_epoch,
-                sum(loss) / len(loss),
-                sum(accurancy) / len(accurancy),
+            print('data type :{}, current_epoch :{}, loss :{}, accurancy :{}'
+                  'false positive rate :{}, false negative rate :{}'.format(
+                   op_type,
+                   current_epoch,
+                   sum(loss) / len(loss),
+                   sum(accurancy) / len(accurancy),
+                   false_positive_rate(true_value, pred_value),
+                   false_negative_rate(true_value, pred_value),
             ))
             break
+
+
+# 误报率
+def false_positive_rate(true_value, pred_value):
+    cm = confusion_matrix(true_value, pred_value)
+    return cm[0][1]/(cm[0][1] + cm[1][1])
+
+
+# 漏报率
+def false_negative_rate(true_value, pred_value):
+    cm = confusion_matrix(true_value, pred_value)
+    return cm[1][0] / (cm[1][0] + cm[0][0])
 
 
