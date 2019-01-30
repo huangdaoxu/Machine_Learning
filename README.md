@@ -14,4 +14,4 @@ Linear Discriminant Analysis使用（python3.6 | numpy1.14）实现的线性判�
 
 Principal components analysis使用（python3.6 | numpy1.14）实现的主成分分析模型，核心通过特征值分解与奇异值分解实现。
 
-malicous_url_detection（python3.6 | tensorflow 1.8 | gensim）异常url检测（web攻击检测）lstm+dynamic_rnn+gensim中word2vec。
+abnormal_url_detection（python3.6 | tensorflow 1.10 | gensim）异常url检测（web攻击检测）lstm+dynamic_rnn+gensim中word2vec。
