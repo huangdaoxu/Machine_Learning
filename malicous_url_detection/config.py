@@ -17,3 +17,9 @@ tf.app.flags.DEFINE_integer("epoch", 20, "number of training epoch")
 tf.app.flags.DEFINE_integer("embedding_size", 32, "vocab vector embedding size")
 tf.app.flags.DEFINE_integer("batch_size", 2, "batch size")
 tf.app.flags.DEFINE_float("learning_rate", 0.01, "learning rate")
+
+
+"""
+cpu core config
+"""
+tf.app.flags.DEFINE_integer("cpu_num", 8, "cpu core number")

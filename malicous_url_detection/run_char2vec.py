@@ -15,7 +15,7 @@ if __name__ == "__main__":
     source_list = write_src_tgt(source_list, target_list,
                                 FLAGS.train_src_file, FLAGS.train_tgt_file)
 
-    model = Char2Vec(size=32, window=5, min_count=1, workers=2, iter=5)
+    model = Char2Vec(size=FLAGS.embedding_size, window=5, min_count=1, workers=2, iter=5)
     model_path = FLAGS.word2vec_model_path
     if os.path.exists(model_path):
         model.load(model_path)

@@ -63,8 +63,10 @@ class Rnn_Net(object):
     def _get_lstm_cell(num_units):
         cell = tf.nn.rnn_cell.LSTMCell(
             num_units,
-            initializer=tf.random_normal_initializer(mean=0.0, stddev=0.1),
-            state_is_tuple=True
+            initializer=tf.orthogonal_initializer(),
+            state_is_tuple=True,
+            activation=tf.nn.tanh,
+            forget_bias=1.0,
         )
         return cell
 
