@@ -56,8 +56,14 @@ class Rnn_Net(object):
         tf.losses.sparse_softmax_cross_entropy(labels=target_input, logits=logits)
         self.loss = tf.losses.get_total_loss(add_regularization_losses=True, name='total_loss')
 
+        self.learning_rate = tf.train.exponential_decay(
+            learning_rate=FLAGS.learning_rate,
+            global_step=FLAGS.epoch,
+            decay_steps=FLAGS.decay_steps,
+            decay_rate=FLAGS.decay_rate,
+        )
         self.train_op = tf.train.AdamOptimizer(
-            learning_rate=FLAGS.learning_rate).minimize(self.loss)
+            learning_rate=self.learning_rate).minimize(self.loss)
 
     @staticmethod
     def _get_lstm_cell(num_units):
@@ -67,6 +73,12 @@ class Rnn_Net(object):
             state_is_tuple=True,
             activation=tf.nn.tanh,
             forget_bias=1.0,
+        )
+        cell = tf.nn.rnn_cell.DropoutWrapper(
+            cell,
+            input_keep_prob=1.0,
+            output_keep_prob=0.9,
+            state_keep_prob=0.9,
         )
         return cell
 
