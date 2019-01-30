@@ -25,7 +25,7 @@ class Rnn_Net(object):
         rnn_inputs = tf.nn.embedding_lookup(params=self.embeddings, ids=source)
 
         stack = tf.nn.rnn_cell.MultiRNNCell(
-            [self._get_lstm_cell(FLAGS.num_hidden) for _ in range(0, FLAGS.num_layers)],
+            [self._get_rnn_dropout(self._get_lstm_cell(FLAGS.num_hidden)) for _ in range(0, FLAGS.num_layers)],
             state_is_tuple=True
         )
 
@@ -38,12 +38,6 @@ class Rnn_Net(object):
 
         outputs = tf.reshape(outputs, [-1, FLAGS.num_steps * FLAGS.num_hidden])
         print(outputs.get_shape())
-
-        # outputs = tf.layers.dense(outputs, units=512,
-        #                           activation=tf.nn.relu, kernel_regularizer=regularizer)
-        #
-        # outputs = tf.layers.dense(outputs, units=64,
-        #                           activation=tf.nn.relu, kernel_regularizer=regularizer)
 
         logits = tf.layers.dense(outputs, units=self.num_classes,
                                  activation=None, kernel_regularizer=regularizer)
@@ -74,11 +68,15 @@ class Rnn_Net(object):
             activation=tf.nn.tanh,
             forget_bias=1.0,
         )
+        return cell
+
+    @staticmethod
+    def _get_rnn_dropout(cell):
         cell = tf.nn.rnn_cell.DropoutWrapper(
             cell,
-            input_keep_prob=1.0,
-            output_keep_prob=0.9,
-            state_keep_prob=0.9,
+            input_keep_prob=FLAGS.input_keep_prob,
+            output_keep_prob=FLAGS.output_keep_prob,
+            state_keep_prob=FLAGS.state_keep_prob,
         )
         return cell
 
