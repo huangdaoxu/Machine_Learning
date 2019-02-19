@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4c5b795e-5d51-40a5-9817-4e298459ca7d" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../ann/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../ann/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ann/artificial_neural_network.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ann/artificial_neural_network.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -191,8 +191,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/convert_model_utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="426">
-              <caret line="94" column="31" selection-start-line="94" selection-start-column="31" selection-end-line="94" selection-end-column="31" />
+            <state relative-caret-position="514">
+              <caret line="98" column="23" lean-forward="true" selection-start-line="98" selection-start-column="23" selection-end-line="98" selection-end-column="23" />
               <folding>
                 <marker date="1550566975217" expanded="true" signature="310:315" ph="..." />
                 <marker date="1550566975217" expanded="true" signature="363:368" ph="..." />
@@ -556,6 +556,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Favorites" order="0" side_tool="true" />
       <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.26800978" />
@@ -866,8 +867,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/convert_model_utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="426">
-          <caret line="94" column="31" selection-start-line="94" selection-start-column="31" selection-end-line="94" selection-end-column="31" />
+        <state relative-caret-position="514">
+          <caret line="98" column="23" lean-forward="true" selection-start-line="98" selection-start-column="23" selection-end-line="98" selection-end-column="23" />
           <folding>
             <marker date="1550566975217" expanded="true" signature="310:315" ph="..." />
             <marker date="1550566975217" expanded="true" signature="363:368" ph="..." />
