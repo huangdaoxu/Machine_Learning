@@ -43,7 +43,7 @@ class Rnn_Net(object):
                                  activation=None, kernel_regularizer=regularizer)
         print(logits.get_shape())
 
-        self.y_pred = tf.cast(tf.argmax(logits, 1), tf.int32)
+        self.y_pred = tf.cast(tf.argmax(logits, 1), tf.int32, name="y_pred")
 
         self.accurancy = tf.reduce_mean(tf.cast(tf.equal(self.y_pred, target_input), tf.float32))
 
@@ -84,6 +84,7 @@ class Rnn_Net(object):
 def train(net, sess):
     sess.run(tf.global_variables_initializer())
     tf.tables_initializer().run()
+    writer = tf.summary.FileWriter(FLAGS.tb_path, sess.graph)
 
     saver = tf.train.Saver()
     ckpt = tf.train.get_checkpoint_state(FLAGS.model_path)
@@ -101,16 +102,18 @@ def train(net, sess):
                 sess.run(net.train_op)
             except tf.errors.OutOfRangeError:
                 break
-        check_accurancy(sess, net, current_epoch, 'train')
-        check_accurancy(sess, net, current_epoch, 'test')
+        check_accuracy(sess, net, current_epoch, 'train')
+        check_accuracy(sess, net, current_epoch, 'test')
         if current_epoch % 10 == 0:
             saver.save(sess, FLAGS.model_path + 'points', global_step=current_epoch)
 
         current_epoch += 1
         sess.run(tf.assign(net.global_step, current_epoch))
 
+    writer.close()
 
-def check_accurancy(sess, net, current_epoch, op_type):
+
+def check_accuracy(sess, net, current_epoch, op_type):
     src_file = FLAGS.train_src_file if op_type == 'train' else FLAGS.test_src_file
     tgt_file = FLAGS.train_tgt_file if op_type == 'train' else FLAGS.test_tgt_file
     sess.run(net.iterator.initializer,

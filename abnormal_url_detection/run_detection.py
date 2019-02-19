@@ -18,12 +18,12 @@ if __name__ == '__main__':
         iterator=iterator
     )
 
-    config = tf.ConfigProto(
-        log_device_placement=True,
-        allow_soft_placement=True,
-        device_count={"CPU": FLAGS.cpu_num},
-    )
+    # config = tf.ConfigProto(
+    #     log_device_placement=True,
+    #     allow_soft_placement=True,
+    #     device_count={"CPU": FLAGS.cpu_num},
+    # )
 
-    with tf.Session(config=config) as sess:
+    with tf.Session() as sess:
         train(net, sess)
 
