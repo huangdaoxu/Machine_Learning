@@ -12,7 +12,7 @@ if __name__ == "__main__":
     # output dataset
     y = np.array([[0], [0], [1], [1]])
     clf = ann.NeuralNetworkClassifer(NeuronsNum=5, FeatureLen=X.shape[1], Learn_rate=0.5)
-    for _ in xrange(100):
+    for _ in range(100):
         clf.fit(X, y)
 
-    print clf.predict(np.array([[0,1,0]]))
+    print(clf.predict(np.array([[0, 1, 0]])))

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created on Fri Jul 21 11:45:30 2017
 
@@ -7,7 +6,7 @@ Created on Fri Jul 21 11:45:30 2017
 
 import numpy as np
 
-# 简单三层神经网络实现
+# 3 layers nueral network
 class NeuralNetworkClassifer(object):
     
     def __init__(self, NeuronsNum, FeatureLen, Learn_rate):
@@ -20,15 +19,14 @@ class NeuralNetworkClassifer(object):
         self.FeatureLen = FeatureLen
         self.Learn_rate = Learn_rate
         # 第一层传导到第二层的权重值矩阵初始化
-        self.Weights12 = np.random.normal(loc=0, scale=1,size = [self.FeatureLen,self.NeuronsNum])
+        self.Weights12 = np.random.normal(loc=0, scale=1, size=[self.FeatureLen, self.NeuronsNum])
         # 第一层传导到第二层的偏置项初始化
-        self.Bias12 = np.random.normal(loc=0, scale=1,size = [1,self.NeuronsNum])
+        self.Bias12 = np.random.normal(loc=0, scale=1, size=[1, self.NeuronsNum])
         # 第二层传导到第三层的权重值矩阵初始化
-        self.Weights23 = np.random.normal(loc=0, scale=1,size = [self.NeuronsNum,1])
+        self.Weights23 = np.random.normal(loc=0, scale=1, size=[self.NeuronsNum, 1])
         # 第二层传导到第三层的偏置项初始化
-        self.Bias23 = np.random.normal(loc=0, scale=1,size = 1)
+        self.Bias23 = np.random.normal(loc=0, scale=1, size=1)
 
-    # 激活函数
     def __sigmoid(self, x):
         return 1/(1 + np.exp(-x))
     
@@ -38,22 +36,20 @@ class NeuralNetworkClassifer(object):
     def __tanh(self, x):
         return np.tanh(x)
 
-    #sigmoid的导数
+    # derivative of sigmoid
     def __dsigmoid(self, x):
         return x * (1 - x)
 
-    # 训练
     def fit(self, feature, label):
         #将feature转化为np.array
         feature = np.array(feature)
         # 输入层前向传导到第二层的计算结果
-        result12 = self.__sigmoid(np.dot(feature,self.Weights12) + self.Bias12)
+        result12 = self.__sigmoid(np.dot(feature, self.Weights12) + self.Bias12)
         # 第二层到第三层的计算结果
-        result23 = self.__sigmoid(np.dot(result12,self.Weights23) + self.Bias23)
+        result23 = self.__sigmoid(np.dot(result12, self.Weights23) + self.Bias23)
         self.__gradient_descent_sigmoid(feature, label, result12, result23)
-    
-    # 常用全连接层后输出函数
-    def __softmax(self,x):
+
+    def __softmax(self, x):
         tmp = np.exp(x - np.max(x))
         return tmp / tmp.sum()
 
@@ -69,7 +65,7 @@ class NeuralNetworkClassifer(object):
         self.Bias23 += self.Learn_rate * np.mean(delta23, axis=0)
         self.Bias12 += self.Learn_rate * np.mean(delta12, axis=0)
 
-        print "Error: " + str(np.mean(np.square(error23)))
+        print("loss: ", np.mean(np.square(error23)))
 
 
     def predict(self,feature):
