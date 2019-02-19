@@ -1,17 +1,17 @@
-# 机器学习实战
+# Machine Learning
 
-ann使用（python 2.7.13 | numpy1.10）实现的简单神经网络模型。该模型中未加入正则化。
+**ann**(python 3.6 | numpy1.15)implement a 3 layers neural netowrk, but no use L2 regularization in ann model.
 
-ocr_cnn_tensorflow使用（python 3.6 | tensorflow 1.8）编写的4位固定长度数字验证码识别模型。4万张照片迭代50次，准确率达到97%以上。
+**ocr_cnn_tensorflow**(python 3.6 | tensorflow 1.10)implement a 4 length verification code recognition model, model accuracy rate is over 97%。
 
-ocr_lstmctc_tensorflow使用（python 3.6 | tensorflow 1.8）实现的lstm+ctc进行变长验证码识别的模型，4万张图片迭代50次，准确率达到95%以上。
+**ocr_lstmctc_tensorflow**(python 3.6 | tensorflow 1.10)The model of variable length verification code recognition, 40000 pictures are iterated 50 times, and the accuracy rate is over 95%.
 
-recommendSys 是一个以numpy为基础编写的推荐系统，分别为基于用户的协同过滤、基于物品的协同过滤、LFM模型，以隐性反馈数据为基础（显性反馈数据同样适用这些模型）。LFM模型说明链接如下：http://www.jianshu.com/p/9270edf4b08b 。
+**recommendSys**(python 3.6 | tensorflow 1.10) The simple recommendation system is user-based, item-based, and LFM model, based on implicit feedback data (the explicit feedback data is also applicable to these models). The LFM model description links are as follows: http://www.jianshu.com/p/9270edf4b08b 。
 
-autoencoder使用（python 2.7.13 | tensorflow version1.2）实现的自编码模型，该模型常用于提取非线性有效特征以及降低特征维度（作用与PCA降维类似），激活函数的选取非常重要，在不同的特征集上需要找到最合适的参数。
+**autoencoder**(python 2.7.13 | tensorflow 1.2)This model is often used to extract nonlinear effective features and reduce feature dimensions. The selection of activation functions is very important. It is necessary to find the most suitable parameters on different feature sets.
 
-Linear Discriminant Analysis使用（python3.6 | numpy1.14）实现的线性判别分析模型，核心通过特征值分解实现，而sklearn中有三种kernel。它属于监督学习方式的特征降维，而PCA是非监督学习。理论知识及公式基于周志华老师的机器学习书籍。
+**Linear Discriminant Analysis**(python3.6 | numpy1.14)The linear discriminant analysis, the core is realized by eigenvalue decomposition, and there are three kinds of kernels in sklearn. It belongs to the feature dimension of supervised learning, while PCA is unsupervised learning. The theoretical knowledge and formula are based on Zhou Zhihua's machine learning books.
 
-Principal components analysis使用（python3.6 | numpy1.14）实现的主成分分析模型，核心通过特征值分解与奇异值分解实现。
+**Principal components analysis**(python3.6 | numpy1.14)Principal component analysis, the core is realized by eigenvalue decomposition and singular value decomposition.
 
-abnormal_url_detection（python3.6 | tensorflow 1.10 | gensim）异常url检测（web攻击检测）lstm+dynamic_rnn+gensim中word2vec。
+**abnormal_url_detection**(python3.6 | tensorflow 1.10 | gensim)Abnormal url detection, use lstm and dense layer.
