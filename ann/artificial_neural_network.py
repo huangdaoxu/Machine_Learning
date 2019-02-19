@@ -70,7 +70,7 @@ class NeuralNetworkClassifer(object):
 
     def predict(self,feature):
         # 输入层前向传导到第二层的计算结果
-        result12 = self.__sigmoid(np.dot(feature,self.Weights12) + self.Bias12)
+        result12 = self.__sigmoid(np.dot(feature, self.Weights12) + self.Bias12)
         # 第二层到第三层的计算结果
-        result23 = self.__sigmoid(np.dot(result12,self.Weights23) + self.Bias23)
+        result23 = self.__sigmoid(np.dot(result12, self.Weights23) + self.Bias23)
         return result23

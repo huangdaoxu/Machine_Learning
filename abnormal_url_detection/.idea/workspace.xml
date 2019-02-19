@@ -2,14 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4c5b795e-5d51-40a5-9817-4e298459ca7d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../ann/.idea/ann.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ann/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ann/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ann/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ann/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ann/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../ann/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../ann/artificial_neural_network.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ann/artificial_neural_network.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ann/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ann/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -562,7 +556,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info id="Favorites" order="0" side_tool="true" />
       <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.26800978" />
