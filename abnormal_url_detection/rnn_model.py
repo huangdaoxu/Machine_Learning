@@ -1,4 +1,5 @@
 from utils import *
+from decorator import run_timer
 from sklearn.metrics import confusion_matrix
 
 
@@ -113,6 +114,7 @@ def train(net, sess):
     writer.close()
 
 
+@run_timer
 def check_accuracy(sess, net, current_epoch, op_type):
     src_file = FLAGS.train_src_file if op_type == 'train' else FLAGS.test_src_file
     tgt_file = FLAGS.train_tgt_file if op_type == 'train' else FLAGS.test_tgt_file

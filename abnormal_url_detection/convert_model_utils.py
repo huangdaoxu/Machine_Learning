@@ -44,7 +44,7 @@ def load_pb(model_path):
 
 def pred_txt_data_by_pb():
     cm = load_pb(FLAGS.model_pb_file)
-    iterator = get_iterator(batch_size=FLAGS.batch_size)
+    iterator = get_pred_iterator(batch_size=FLAGS.batch_size)
 
     with tf.Session() as sess:
         tf.tables_initializer().run()
@@ -71,7 +71,7 @@ def pred_txt_data_by_pb():
 
 
 def pred_txt_data_by_restore():
-    iterator = get_iterator(batch_size=FLAGS.batch_size)
+    iterator = get_pred_iterator(batch_size=FLAGS.batch_size)
 
     with tf.Session() as sess:
         saver = tf.train.import_meta_graph(FLAGS.model_path + "point-20.meta")

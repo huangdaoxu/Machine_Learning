@@ -182,6 +182,70 @@ def get_iterator(batch_size, buffer_size=None, random_seed=None,
         input_target_file=input_target_file)
 
 
+def get_pred_iterator(batch_size, buffer_size=None,
+                      num_threads=4, src_max_len=FLAGS.num_steps):
+    input_source_file = tf.placeholder(dtype=tf.string, shape=None, name="input_source_file")
+    src_dataset = tf.data.TextLineDataset(input_source_file)
+    vocab_table = create_vocab_tables(FLAGS.vocab_file)
+    vocab_size = get_vocab_size(FLAGS.vocab_file)
+
+    if buffer_size is None:
+        buffer_size = batch_size * 5
+
+    src_dataset = src_dataset.map(
+        lambda src: (
+            tf.string_split([src]).values),
+        num_parallel_calls=num_threads
+    )
+    src_dataset.prefetch(buffer_size)
+
+    src_dataset = src_dataset.map(
+        lambda src: (src[:src_max_len]),
+        num_parallel_calls=num_threads
+    )
+    src_dataset.prefetch(buffer_size)
+
+    src_dataset = src_dataset.map(
+        lambda src: (tf.cast(vocab_table.lookup(src), tf.int32)),
+        num_parallel_calls=num_threads
+    )
+    src_dataset.prefetch(buffer_size)
+
+    src_dataset = src_dataset.map(
+        lambda src: (src, tf.size(src)),
+        num_parallel_calls=num_threads
+    )
+    src_dataset.prefetch(buffer_size)
+
+    def batching_func(x):
+        return x.padded_batch(
+            batch_size,
+            # The first three entries are the source and target line rows;
+            # these have unknown-length vectors.  The last two entries are
+            # the source and target row sizes; these are scalars.
+            padded_shapes=(tf.TensorShape([src_max_len]),  # src
+                           tf.TensorShape([])),  # src_len
+            # Pad the source and target sequences with eos tokens.
+            # (Though notice we don't generally need to do this since
+            # later on we will be masking out calculations past the true sequence.
+            padding_values=(vocab_size + 1,  # src
+                            0))  # src_len -- unused
+
+    batched_dataset = batching_func(src_dataset)
+
+    batched_iter = batched_dataset.make_initializable_iterator()
+    (src_ids, src_seq_len) = (batched_iter.get_next())
+
+    return BatchedInput(
+        initializer=batched_iter.initializer,
+        source=src_ids,
+        target_input=None,
+        source_sequence_length=src_seq_len,
+        input_source_file=input_source_file,
+        input_target_file=None)
+
+
+
 """
 Just for testing
 """
