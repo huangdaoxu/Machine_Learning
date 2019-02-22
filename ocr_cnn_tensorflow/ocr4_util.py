@@ -8,8 +8,8 @@ import tensorflow as tf
 from PIL import Image
 from captcha.image import ImageCaptcha
 
-PIC_WIDTH = 120
-PIC_HEIGHT = 60
+PIC_WIDTH = 224
+PIC_HEIGHT = 224
 PIC_CHANNELS = 3
 FONT_SIZES = [i for i in range(30, 40)]
 

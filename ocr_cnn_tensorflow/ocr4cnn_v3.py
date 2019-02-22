@@ -1,4 +1,8 @@
+import sys
+sys.path.append("../")
+
 from ocr4_util import *
+from ImageNet.GoogleNet import inception_v1
 
 
 class Ocr4LenCnnModel(object):
@@ -42,82 +46,11 @@ class Ocr4LenCnnModel(object):
         global_step = tf.Variable(0, trainable=False)
         training = tf.placeholder(tf.bool, name='training')
 
-        regularizer = tf.contrib.layers.l2_regularizer(scale=0.001)
-
-        with tf.name_scope('conv1'):
-            out = tf.layers.conv2d(inputs=x, filters=32, kernel_size=[3, 3], name='conv11',
-                                   padding='same', kernel_regularizer=regularizer, activation=tf.nn.relu)
-            out = tf.layers.conv2d(inputs=out, filters=32, kernel_size=[3, 3], name='conv12',
-                                   padding='same', kernel_regularizer=regularizer, activation=tf.nn.relu)
-            out = self.batch_norm(out, training, name='conv1_bn')
-            out = tf.layers.max_pooling2d(inputs=out, pool_size=[2, 2], strides=2, name='pool1')
-
-        with tf.name_scope('conv2'):
-            out = tf.layers.conv2d(inputs=out, filters=64, kernel_size=[3, 3], name='conv21',
-                                   padding='same', kernel_regularizer=regularizer, activation=tf.nn.relu)
-            out = tf.layers.conv2d(inputs=out, filters=64, kernel_size=[3, 3], name='conv22',
-                                   padding='same', kernel_regularizer=regularizer, activation=tf.nn.relu)
-            # out = tf.layers.conv2d(inputs=out, filters=64, kernel_size=[3, 3], name='conv23',
-            #                        padding='same', kernel_regularizer=regularizer, activation=tf.nn.relu)
-            out = self.batch_norm(out, training, name='conv2_bn')
-            out = tf.layers.max_pooling2d(inputs=out, pool_size=[2, 2], strides=[1, 2], name='pool2', padding='same')
-
-        with tf.name_scope('conv3'):
-            out = tf.layers.conv2d(inputs=out, filters=128, kernel_size=[3, 3], name='conv31',
-                                   padding='same', kernel_regularizer=regularizer, activation=tf.nn.relu)
-            out = tf.layers.conv2d(inputs=out, filters=128, kernel_size=[3, 3], name='conv32',
-                                   padding='same', kernel_regularizer=regularizer, activation=tf.nn.relu)
-            # out = tf.layers.conv2d(inputs=out, filters=128, kernel_size=[3, 3], name='conv33',
-            #                        padding='same', kernel_regularizer=regularizer, activation=tf.nn.relu)
-            out = self.batch_norm(out, training, name='conv3_bn')
-            out = tf.layers.max_pooling2d(inputs=out, pool_size=[2, 2], strides=2, name='pool3')
-
-        with tf.name_scope('conv4'):
-            out = tf.layers.conv2d(inputs=out, filters=256, kernel_size=[3, 3], name='conv41',
-                                   padding='same', kernel_regularizer=regularizer, activation=tf.nn.relu)
-            out = tf.layers.conv2d(inputs=out, filters=256, kernel_size=[3, 3], name='conv42',
-                                   padding='same', kernel_regularizer=regularizer, activation=tf.nn.relu)
-            # out = tf.layers.conv2d(inputs=out, filters=256, kernel_size=[3, 3], name='conv43',
-            #                        padding='same', kernel_regularizer=regularizer, activation=tf.nn.relu)
-            out = self.batch_norm(out, training, name='conv4_bn')
-            out = tf.layers.max_pooling2d(inputs=out, pool_size=[2, 2], strides=2, name='pool4')
-
-        out = tf.layers.conv2d(inputs=out, filters=2048, kernel_size=[7, 7], name='conv5', padding='valid',
-                               activation=tf.nn.relu, kernel_regularizer=regularizer)
-        out = self.batch_norm(out, training, name='conv5_bn')
-        out = tf.nn.dropout(out, keep_prob)
-
-        out = tf.reshape(out, [-1, 2048], name='conv5/reshape')
-
-        out11 = tf.layers.dense(out, units=1024, activation=tf.nn.relu, kernel_regularizer=regularizer)
-        out12 = tf.layers.dense(out, units=1024, activation=tf.nn.relu, kernel_regularizer=regularizer)
-        out13 = tf.layers.dense(out, units=1024, activation=tf.nn.relu, kernel_regularizer=regularizer)
-        out14 = tf.layers.dense(out, units=1024, activation=tf.nn.relu, kernel_regularizer=regularizer)
-
-        out11 = self.batch_norm(out11, training, name='out11_bn')
-        out12 = self.batch_norm(out12, training, name='out12_bn')
-        out13 = self.batch_norm(out13, training, name='out13_bn')
-        out14 = self.batch_norm(out14, training, name='out14_bn')
-
-        out21 = tf.layers.dense(out11, units=512, activation=tf.nn.relu, kernel_regularizer=regularizer)
-        out22 = tf.layers.dense(out12, units=512, activation=tf.nn.relu, kernel_regularizer=regularizer)
-        out23 = tf.layers.dense(out13, units=512, activation=tf.nn.relu, kernel_regularizer=regularizer)
-        out24 = tf.layers.dense(out14, units=512, activation=tf.nn.relu, kernel_regularizer=regularizer)
-
-        out21 = self.batch_norm(out21, training, name='out21_bn')
-        out22 = self.batch_norm(out22, training, name='out22_bn')
-        out23 = self.batch_norm(out23, training, name='out23_bn')
-        out24 = self.batch_norm(out24, training, name='out24_bn')
-
-        out31 = tf.layers.dense(out21, units=num_classes, activation=None, kernel_regularizer=regularizer)
-        out32 = tf.layers.dense(out22, units=num_classes, activation=None, kernel_regularizer=regularizer)
-        out33 = tf.layers.dense(out23, units=num_classes, activation=None, kernel_regularizer=regularizer)
-        out34 = tf.layers.dense(out24, units=num_classes, activation=None, kernel_regularizer=regularizer)
-
-        logits = tf.stack([out31, out32, out33, out34], 1)
+        net = inception_v1(x, 4*num_classes)
+        logits = tf.reshape(net, [-1, 4, num_classes])
 
         tf.losses.sparse_softmax_cross_entropy(labels=y, logits=logits)
-        loss = tf.losses.get_total_loss(add_regularization_losses=True, name='total_loss')
+        loss = tf.losses.get_total_loss(add_regularization_losses=False, name='total_loss')
 
         y_pred = tf.argmax(logits, 2)
         correct_prediction = tf.equal(y_pred, y)
