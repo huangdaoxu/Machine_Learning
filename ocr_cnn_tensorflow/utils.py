@@ -18,7 +18,7 @@ class DataIterator(object):
     def __init__(self):
         ...
 
-    def __build_model(self):
+    def __read_tensor(self):
         self.filename = tf.placeholder(dtype=tf.string)
         self.suffix = tf.placeholder(dtype=tf.string)
         image_string = tf.read_file(self.filename)
@@ -47,6 +47,7 @@ class DataIterator(object):
         return file_path, label_dict
 
     def image2tfrecord(self, data_dir, sess):
+        self.__read_tensor()
         file_path, label_dict = self.__list_images(data_dir)
         writer = tf.python_io.TFRecordWriter(FLAGS.train_records_dir)
         for file in file_path:
