@@ -14,4 +14,6 @@
 
 **Principal components analysis**(python3.6 | numpy1.14)Principal component analysis, the core is realized by eigenvalue decomposition and singular value decomposition.
 
-**abnormal_url_detection**(python3.6 | tensorflow 1.10 | gensim)Abnormal url detection, use lstm and dense layer.
+**abnormal_url_detection**(python3.6 | tensorflow 1.10 | gensim)Application of deep learning in web attack detection.
+
+**Imagenet**(python 3.6 | tensorflow 1.10)implements several popular CNN frameworks, such as alexnet, vggnet, googlenet, resnet, etc.
