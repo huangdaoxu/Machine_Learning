@@ -93,7 +93,7 @@ if __name__ == "__main__":
     #     dataset.image2tfrecord(FLAGS.train_pic_dir, sess)
     filenames = tf.placeholder(tf.string, shape=[None])
     dataset = DataIterator()
-    iterator, next_element = dataset.get_iterator(filenames=filenames)
+    iterator, next_element = dataset.get_iterator(filenames=filenames, batch_size=32)
     with tf.Session() as sess:
         sess.run(iterator.initializer, feed_dict={filenames: [FLAGS.train_records_dir]})
 
