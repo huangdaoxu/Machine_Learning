@@ -53,6 +53,8 @@ class DataIterator(object):
         for file in file_path:
             code = os.path.basename(file).split('.')[0]
             suffix = os.path.basename(file).split('.')[1]
+            if len(code) != 4:
+                continue
             image = sess.run(self.resized_image, feed_dict={self.filename: file,
                                                             self.suffix: suffix})
             label = [label_dict[c] for c in code]
@@ -89,20 +91,20 @@ class DataIterator(object):
 
 
 if __name__ == "__main__":
-    # dataset = DataIterator()
-    # with tf.Session() as sess:
-    #     dataset.image2tfrecord(FLAGS.train_pic_dir, sess)
-
-    filenames = tf.placeholder(tf.string, shape=[None])
     dataset = DataIterator()
-    iterator, next_element = dataset.get_iterator(filenames=filenames, batch_size=32)
     with tf.Session() as sess:
-        sess.run(iterator.initializer, feed_dict={filenames: [FLAGS.train_records_dir]})
+        dataset.image2tfrecord(FLAGS.train_pic_dir, sess)
 
-        while True:
-            try:
-                image, label = sess.run(next_element)
-                print(image.shape, label.shape)
-            except tf.errors.OutOfRangeError:
-                break
+    # filenames = tf.placeholder(tf.string, shape=[None])
+    # dataset = DataIterator()
+    # iterator, next_element = dataset.get_iterator(filenames=filenames, batch_size=32)
+    # with tf.Session() as sess:
+    #     sess.run(iterator.initializer, feed_dict={filenames: [FLAGS.train_records_dir]})
+    #
+    #     while True:
+    #         try:
+    #             image, label = sess.run(next_element)
+    #             print(image.shape, label.shape)
+    #         except tf.errors.OutOfRangeError:
+    #             break
 
