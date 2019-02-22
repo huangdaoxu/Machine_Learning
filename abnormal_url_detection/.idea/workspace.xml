@@ -167,19 +167,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/rnn_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="494">
+            <state relative-caret-position="412">
               <caret line="104" column="21" lean-forward="true" selection-start-line="104" selection-start-column="21" selection-end-line="104" selection-end-column="21" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="456">
+            <state relative-caret-position="-14">
               <caret line="236" column="51" selection-start-line="236" selection-start-column="43" selection-end-line="236" selection-end-column="51" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
@@ -904,21 +904,21 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/rnn_model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="412">
+          <caret line="104" column="21" lean-forward="true" selection-start-line="104" selection-start-column="21" selection-end-line="104" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="456">
+        <state relative-caret-position="-14">
           <caret line="236" column="51" selection-start-line="236" selection-start-column="43" selection-end-line="236" selection-end-column="51" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
             <marker date="1550627777617" expanded="true" signature="6646:8828" ph="..." />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rnn_model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="494">
-          <caret line="104" column="21" lean-forward="true" selection-start-line="104" selection-start-column="21" selection-end-line="104" selection-end-column="21" />
         </state>
       </provider>
     </entry>
