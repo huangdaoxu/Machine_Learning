@@ -57,7 +57,7 @@ class DataIterator(object):
                                                             self.suffix: suffix})
             label = [label_dict[c] for c in code]
             features = {}
-            features['image'] = tf.train.Feature(bytes_list=tf.train.FloatList(value=image.tobytes()))
+            features['image'] = tf.train.Feature(bytes_list=tf.train.BytesList(value=image.tobytes()))
             # 用int64来表达label
             features['label'] = tf.train.Feature(int64_list=tf.train.Int64List(value=label))
             tf_features = tf.train.Features(feature=features)
@@ -66,8 +66,41 @@ class DataIterator(object):
             writer.write(tf_serialized)
         writer.close()
 
+    def pares_tf(self, example_proto):
+        # 定义解析的字典
+        dics = {}
+        dics['label'] = tf.FixedLenFeature(shape=[], dtype=tf.int64)
+        dics['image'] = tf.FixedLenFeature(shape=[], dtype=tf.string)
+        # 调用接口解析一行样本
+        parsed_example = tf.parse_single_example(serialized=example_proto, features=dics)
+        image = tf.decode_raw(parsed_example['image'], out_type=tf.uint8)
+        label = parsed_example['label']
+        return image, label
+
+    def get_iterator(self, filenames, batch_size):
+        dataset = tf.data.TFRecordDataset(filenames=filenames)
+        dataset = dataset.map(self.pares_tf)
+        dataset = dataset.batch(batch_size)
+
+        iterator = dataset.make_initializable_iterator()
+        next_element = iterator.get_next()
+        return iterator, next_element
+
 
 if __name__ == "__main__":
+    # dataset = DataIterator()
+    # with tf.Session() as sess:
+    #     dataset.image2tfrecord(FLAGS.train_pic_dir, sess)
+    filenames = tf.placeholder(tf.string, shape=[None])
     dataset = DataIterator()
+    iterator, next_element = dataset.get_iterator(filenames=filenames)
     with tf.Session() as sess:
-        dataset.image2tfrecord(FLAGS.train_pic_dir, sess)
+        sess.run(iterator.initializer, feed_dict={filenames: [FLAGS.train_records_dir]})
+
+        while True:
+            try:
+                image, label = sess.run(next_element)
+                print(image.shape, label.shape)
+            except tf.errors.OutOfRangeError:
+                break
+
