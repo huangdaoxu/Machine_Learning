@@ -76,6 +76,7 @@ class DataIterator(object):
         image = tf.decode_raw(parsed_example['image'], out_type=tf.uint8)
         image = tf.reshape(image, shape=[224, 224, 3])
         label = parsed_example['label']
+        label = tf.reshape(label, shape=[4])
         return image, label
 
     def get_iterator(self, filenames, batch_size):
