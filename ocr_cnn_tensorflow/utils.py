@@ -68,4 +68,5 @@ class DataIterator(object):
 
 if __name__ == "__main__":
     dataset = DataIterator()
-    dataset.image2tfrecord(FLAGS.train_pic_dir)
+    with tf.Session() as sess:
+        dataset.image2tfrecord(FLAGS.train_pic_dir, sess)
