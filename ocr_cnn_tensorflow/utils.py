@@ -69,14 +69,12 @@ class DataIterator(object):
     def pares_tf(self, example_proto):
         # 定义解析的字典
         dics = {}
-        dics['label'] = tf.FixedLenFeature(shape=[], dtype=tf.int64)
-        dics['image'] = tf.FixedLenFeature(shape=[], dtype=tf.string)
+        dics['label'] = tf.FixedLenFeature(shape=[4], dtype=tf.int64)
+        dics['image'] = tf.FixedLenFeature(shape=[224, 224, 3], dtype=tf.string)
         # 调用接口解析一行样本
         parsed_example = tf.parse_single_example(serialized=example_proto, features=dics)
         image = tf.decode_raw(parsed_example['image'], out_type=tf.uint8)
-        image = tf.reshape(image, shape=[224, 224, 3])
         label = parsed_example['label']
-        label = tf.reshape(label, shape=[4])
         return image, label
 
     def get_iterator(self, filenames, batch_size):
