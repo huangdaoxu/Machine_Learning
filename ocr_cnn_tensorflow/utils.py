@@ -57,7 +57,7 @@ class DataIterator(object):
                                                             self.suffix: suffix})
             label = [label_dict[c] for c in code]
             features = {}
-            features['image'] = tf.train.Feature(bytes_list=tf.train.FloatList(value=image))
+            features['image'] = tf.train.Feature(bytes_list=tf.train.FloatList(value=image.tobytes()))
             # 用int64来表达label
             features['label'] = tf.train.Feature(int64_list=tf.train.Int64List(value=label))
             tf_features = tf.train.Features(feature=features)
