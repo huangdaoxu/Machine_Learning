@@ -11,18 +11,6 @@ class Ocr4LenCnnModel(object):
         self.model_path = model_path
         self.__build_model()
 
-        if not is_training:
-            self.sess = tf.Session()
-            self.sess.run(tf.global_variables_initializer())
-
-            saver = tf.train.Saver()
-            ckpt = tf.train.get_checkpoint_state(self.model_path)
-            if ckpt is not None:
-                path = ckpt.model_checkpoint_path
-                saver.restore(self.sess, path)
-            else:
-                raise ValueError("model path is not find")
-
     @staticmethod
     def batch_norm(x, is_training, name):
         bn = tf.layers.batch_normalization(
@@ -54,20 +42,17 @@ class Ocr4LenCnnModel(object):
         self.y_pred = tf.argmax(logits, 1)
         self.correct_prediction = tf.equal(self.y_pred, self.y)
 
-    def check_accuracy(self, data_set, sess):
-        """
-        Check the accuracy of the model on either train or val (depending on dataset_init_op).
-        """
-        # Initialize the correct dataset
-        data_set.data_init_op(sess)
+    def check_accuracy(self, iterator, sess, op_type):
+        sess.run(iterator.initializer,
+                 feed_dict={iterator.filenames: [FLAGS.train_records_dir if op_type == "train" else FLAGS.test_records_dir]})
         num_correct, num_samples = 0, 0
         while True:
             try:
-                x, y = data_set.get_next()
-                if x is None: break
+                image, label = sess.run(iterator.image, iterator.label)
+                if image is None: break
                 correct_pred = sess.run(self.correct_prediction,
-                                        feed_dict={self.x: x,
-                                                   self.y: y,
+                                        feed_dict={self.x: image,
+                                                   self.y: label,
                                                    self.keep_prob: 1.0,
                                                    self.training: False})
                 num_correct += correct_pred.sum()
@@ -79,13 +64,13 @@ class Ocr4LenCnnModel(object):
         acc = float(num_correct) / num_samples
         return acc
 
-    def train_model(self, train_data_size, test_data_size, batch_size, decay_steps, keep_prob,
-                    epoch, learning_rate, train_data_dir, test_data_dir):
+    def train_model(self, batch_size, decay_steps, keep_prob,
+                    epoch, learning_rate):
         if not self.is_training:
             raise ValueError("this is compute mode, please reconstruct model with is_training")
 
-        train_dataset = DataIterator(data_size=train_data_size, batch_size=batch_size, data_dir=train_data_dir)
-        test_dataset = DataIterator(data_size=test_data_size, batch_size=batch_size, data_dir=test_data_dir)
+        dataset = DataIterator()
+        iterator = dataset.get_iterator(batch_size=32)
 
         lr = tf.train.exponential_decay(
             learning_rate=learning_rate,
@@ -118,18 +103,19 @@ class Ocr4LenCnnModel(object):
 
             while True:
                 if current_epoch > epoch: break
-                train_dataset.data_init_op(sess)
+                sess.run(iterator.initializer,
+                         feed_dict={iterator.filenames: [FLAGS.train_records_dir]})
                 while True:
-                    train_x, train_y = train_dataset.get_next()
-                    if train_x is None: break
-                    _ = sess.run(train_step, feed_dict={self.x: train_x,
-                                                        self.y: train_y,
+                    image, label = sess.run(iterator.image, iterator.label)
+                    if image is None: break
+                    _ = sess.run(train_step, feed_dict={self.x: image,
+                                                        self.y: label,
                                                         self.keep_prob: keep_prob,
                                                         self.training: True})
 
                 if current_epoch % 10 == 0:
-                    train_acc = self.check_accuracy(train_dataset, sess)
-                    val_acc = self.check_accuracy(test_dataset, sess)
+                    train_acc = self.check_accuracy(iterator, sess, "train")
+                    val_acc = self.check_accuracy(iterator, sess, "test")
                     logging.info('epoch: {}, Train accuracy: {}, Val accuracy: {}'.format(current_epoch, train_acc, val_acc))
                     sess.run(tf.assign(self.global_step, current_epoch))
                     saver.save(sess, self.model_path + 'points', global_step=current_epoch)

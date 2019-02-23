@@ -1,4 +1,5 @@
 import os
+import collections
 
 from config import *
 
@@ -12,6 +13,14 @@ alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n'
 ALPHABET = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
             'V', 'W', 'X', 'Y', 'Z']
 src_data = number + alphabet + ALPHABET
+
+
+class BatchedInput(collections.namedtuple("BatchedInput",
+                                          ("initializer",
+                                           "image",
+                                           "label"
+                                           "filenames"))):
+    pass
 
 
 class DataIterator(object):
@@ -81,8 +90,9 @@ class DataIterator(object):
         label = tf.cast(label, tf.int64)
         return image, label
 
-    def get_iterator(self, filenames, batch_size, buffer_size=None,
+    def get_iterator(self, batch_size, buffer_size=None,
                      random_seed=None, num_threads=6):
+        filenames = tf.placeholder(tf.string, shape=[None])
         if buffer_size is None:
             buffer_size = batch_size * 5
 
@@ -93,8 +103,12 @@ class DataIterator(object):
         dataset = dataset.batch(batch_size)
 
         iterator = dataset.make_initializable_iterator()
-        next_element = iterator.get_next()
-        return iterator, next_element
+        image, label = iterator.get_next()
+        return BatchedInput(
+            initializer=iterator.initializer,
+            image=image,
+            label=label,
+            filenames=filenames)
 
 
 if __name__ == "__main__":
@@ -102,15 +116,14 @@ if __name__ == "__main__":
     # with tf.Session() as sess:
     #     dataset.image2tfrecord(FLAGS.train_pic_dir, sess)
 
-    filenames = tf.placeholder(tf.string, shape=[None])
     dataset = DataIterator()
-    iterator, next_element = dataset.get_iterator(filenames=filenames, batch_size=32)
+    iterator = dataset.get_iterator(batch_size=32)
     with tf.Session() as sess:
-        sess.run(iterator.initializer, feed_dict={filenames: [FLAGS.train_records_dir]})
+        sess.run(iterator.initializer, feed_dict={iterator.filenames: [FLAGS.train_records_dir]})
 
         while True:
             try:
-                image, label = sess.run(next_element)
+                image, label = sess.run(iterator.image, iterator.label)
                 print(image.shape, label.shape)
             except tf.errors.OutOfRangeError:
                 break
