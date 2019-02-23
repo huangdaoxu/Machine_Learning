@@ -76,6 +76,7 @@ class DataIterator(object):
         # 调用接口解析一行样本
         parsed_example = tf.parse_single_example(serialized=example_proto, features=dics)
         image = tf.decode_raw(parsed_example['image'], out_type=tf.uint8)
+        image = tf.reshape(image, shape=[224, 224, 3])
         label = parsed_example['label']
         label = tf.cast(label, tf.int64)
         return image, label
@@ -91,20 +92,20 @@ class DataIterator(object):
 
 
 if __name__ == "__main__":
-    dataset = DataIterator()
-    with tf.Session() as sess:
-        dataset.image2tfrecord(FLAGS.train_pic_dir, sess)
-
-    # filenames = tf.placeholder(tf.string, shape=[None])
     # dataset = DataIterator()
-    # iterator, next_element = dataset.get_iterator(filenames=filenames, batch_size=32)
     # with tf.Session() as sess:
-    #     sess.run(iterator.initializer, feed_dict={filenames: [FLAGS.train_records_dir]})
-    #
-    #     while True:
-    #         try:
-    #             image, label = sess.run(next_element)
-    #             print(image.shape, label.shape)
-    #         except tf.errors.OutOfRangeError:
-    #             break
+    #     dataset.image2tfrecord(FLAGS.train_pic_dir, sess)
+
+    filenames = tf.placeholder(tf.string, shape=[None])
+    dataset = DataIterator()
+    iterator, next_element = dataset.get_iterator(filenames=filenames, batch_size=32)
+    with tf.Session() as sess:
+        sess.run(iterator.initializer, feed_dict={filenames: [FLAGS.train_records_dir]})
+
+        while True:
+            try:
+                image, label = sess.run(next_element)
+                print(image.shape, label.shape)
+            except tf.errors.OutOfRangeError:
+                break
 
