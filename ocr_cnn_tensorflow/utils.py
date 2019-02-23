@@ -90,7 +90,7 @@ class DataIterator(object):
         dataset = dataset.map(self.pares_tf, num_parallel_calls=num_threads)
         dataset.prefetch(buffer_size)
         dataset = dataset.shuffle(buffer_size, random_seed)
-        # dataset = dataset.batch(batch_size)
+        dataset = dataset.batch(batch_size)
 
         iterator = dataset.make_initializable_iterator()
         next_element = iterator.get_next()
