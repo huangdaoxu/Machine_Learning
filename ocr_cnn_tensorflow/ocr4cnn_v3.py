@@ -34,12 +34,12 @@ class Ocr4LenCnnModel(object):
         self.training = tf.placeholder(tf.bool, name='training')
 
         net = inception_v1(self.x, 4*num_classes)
-        logits = tf.reshape(net, [-1, num_classes, 4])
+        logits = tf.reshape(net, [-1, 4, num_classes])
 
         tf.losses.sparse_softmax_cross_entropy(labels=self.y, logits=logits)
         self.loss = tf.losses.get_total_loss(add_regularization_losses=True, name='total_loss')
 
-        self.y_pred = tf.argmax(logits, 1)
+        self.y_pred = tf.argmax(logits, 2)
         self.correct_prediction = tf.equal(self.y_pred, self.y)
 
     def check_accuracy(self, iterator, sess, op_type):
