@@ -27,7 +27,7 @@ class Ocr4LenCnnModel(object):
 
     def __build_model(self):
         num_classes = len(src_data)
-        self.x = tf.placeholder("float", shape=[None, PIC_HEIGHT, PIC_WIDTH, PIC_CHANNELS], name='x')
+        self.x = tf.placeholder(tf.float32, shape=[None, PIC_HEIGHT, PIC_WIDTH, PIC_CHANNELS], name='x')
         self.y = tf.placeholder(tf.int64, shape=[None, 4], name='y')
         self.keep_prob = tf.placeholder("float", name='keep_prob')
         self.global_step = tf.Variable(0, trainable=False)
