@@ -71,7 +71,7 @@ class DataIterator(object):
     def pares_tf(self, example_proto):
         # 定义解析的字典
         dics = {}
-        dics['label'] = tf.FixedLenFeature(shape=[], dtype=tf.int64)
+        dics['label'] = tf.FixedLenFeature(shape=[4], dtype=tf.int64)
         dics['image'] = tf.FixedLenFeature(shape=[], dtype=tf.string)
         # 调用接口解析一行样本
         parsed_example = tf.parse_single_example(serialized=example_proto, features=dics)
