@@ -58,7 +58,7 @@ class DataIterator(object):
     def image2tfrecord(self, data_dir, sess):
         self.__read_tensor()
         file_path, label_dict = self.__list_images(data_dir)
-        writer = tf.python_io.TFRecordWriter(FLAGS.train_records_dir)
+        writer = tf.python_io.TFRecordWriter(FLAGS.test_records_dir)
         for file in file_path:
             code = os.path.basename(file).split('.')[0]
             suffix = os.path.basename(file).split('.')[1]
