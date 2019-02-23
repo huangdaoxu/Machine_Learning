@@ -1,4 +1,7 @@
 import tensorflow as tf
+import logging
+
+logging.basicConfig(format="%(asctime)s : %(levelname)s : %(message)s", level=logging.INFO)
 
 FLAGS = tf.app.flags.FLAGS
 

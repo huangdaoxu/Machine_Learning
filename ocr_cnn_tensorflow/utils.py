@@ -75,16 +75,22 @@ class DataIterator(object):
         dics['image'] = tf.FixedLenFeature(shape=[], dtype=tf.string)
         # 调用接口解析一行样本
         parsed_example = tf.parse_single_example(serialized=example_proto, features=dics)
-        image = tf.decode_raw(parsed_example['image'], out_type=tf.uint8)
+        image = tf.decode_raw(parsed_example['image'], out_type=tf.float32)
         image = tf.reshape(image, shape=[224, 224, 3])
         label = parsed_example['label']
         label = tf.cast(label, tf.int64)
         return image, label
 
-    def get_iterator(self, filenames, batch_size):
+    def get_iterator(self, filenames, batch_size, buffer_size=None,
+                     random_seed=None, num_threads=4):
+        if buffer_size is None:
+            buffer_size = batch_size * 5
+
         dataset = tf.data.TFRecordDataset(filenames=filenames)
-        dataset = dataset.map(self.pares_tf)
-        dataset = dataset.batch(batch_size)
+        dataset = dataset.map(self.pares_tf, num_parallel_calls=num_threads)
+        dataset.prefetch(buffer_size)
+        dataset = dataset.shuffle(buffer_size, random_seed)
+        # dataset = dataset.batch(batch_size)
 
         iterator = dataset.make_initializable_iterator()
         next_element = iterator.get_next()

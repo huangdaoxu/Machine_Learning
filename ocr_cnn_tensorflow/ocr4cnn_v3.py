@@ -1,7 +1,7 @@
 import sys
 sys.path.append("../")
 
-from ocr4_util import *
+from utils import *
 from ImageNet.GoogleNet import inception_v1
 
 
@@ -9,8 +9,7 @@ class Ocr4LenCnnModel(object):
     def __init__(self, is_training, model_path, ):
         self.is_training = is_training
         self.model_path = model_path
-        (self.x, self.y, self.keep_prob, self.loss, self.y_pred,
-         self.training, self.global_step, self.correct_prediction) = self.__build_model()
+        self.__build_model()
 
         if not is_training:
             self.sess = tf.Session()
@@ -40,22 +39,20 @@ class Ocr4LenCnnModel(object):
 
     def __build_model(self):
         num_classes = len(src_data)
-        x = tf.placeholder("float", shape=[None, PIC_HEIGHT, PIC_WIDTH, PIC_CHANNELS], name='x')
-        y = tf.placeholder(tf.int64, shape=[None, 4], name='y')
-        keep_prob = tf.placeholder("float", name='keep_prob')
-        global_step = tf.Variable(0, trainable=False)
-        training = tf.placeholder(tf.bool, name='training')
+        self.x = tf.placeholder("float", shape=[None, PIC_HEIGHT, PIC_WIDTH, PIC_CHANNELS], name='x')
+        self.y = tf.placeholder(tf.int64, shape=[None, 4], name='y')
+        self.keep_prob = tf.placeholder("float", name='keep_prob')
+        self.global_step = tf.Variable(0, trainable=False)
+        self.training = tf.placeholder(tf.bool, name='training')
 
-        net = inception_v1(x, 4*num_classes)
-        logits = tf.reshape(net, [-1, 4, num_classes])
+        net = inception_v1(self.x, 4*num_classes)
+        logits = tf.reshape(net, [-1, num_classes, 4])
 
         tf.losses.sparse_softmax_cross_entropy(labels=y, logits=logits)
-        loss = tf.losses.get_total_loss(add_regularization_losses=False, name='total_loss')
+        self.loss = tf.losses.get_total_loss(add_regularization_losses=True, name='total_loss')
 
-        y_pred = tf.argmax(logits, 2)
-        correct_prediction = tf.equal(y_pred, y)
-
-        return x, y, keep_prob, loss, y_pred, training, global_step, correct_prediction
+        self.y_pred = tf.argmax(logits, 1)
+        self.correct_prediction = tf.equal(self.y_pred, self.y)
 
     def check_accuracy(self, data_set, sess):
         """
