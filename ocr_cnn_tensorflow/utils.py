@@ -82,7 +82,7 @@ class DataIterator(object):
         return image, label
 
     def get_iterator(self, filenames, batch_size, buffer_size=None,
-                     random_seed=None, num_threads=4):
+                     random_seed=None, num_threads=6):
         if buffer_size is None:
             buffer_size = batch_size * 5
 
