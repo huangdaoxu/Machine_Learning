@@ -112,19 +112,19 @@ class DataIterator(object):
 
 
 if __name__ == "__main__":
-    # dataset = DataIterator()
-    # with tf.Session() as sess:
-    #     dataset.image2tfrecord(FLAGS.train_pic_dir, sess)
-
     dataset = DataIterator()
-    iterator = dataset.get_iterator(batch_size=32)
     with tf.Session() as sess:
-        sess.run(iterator.initializer, feed_dict={iterator.filenames: [FLAGS.train_records_dir]})
+        dataset.image2tfrecord(FLAGS.test_pic_dir, sess)
 
-        while True:
-            try:
-                image, label = sess.run([iterator.image, iterator.label])
-                print(image.shape, label.shape)
-            except tf.errors.OutOfRangeError:
-                break
+    # dataset = DataIterator()
+    # iterator = dataset.get_iterator(batch_size=32)
+    # with tf.Session() as sess:
+    #     sess.run(iterator.initializer, feed_dict={iterator.filenames: [FLAGS.train_records_dir]})
+    #
+    #     while True:
+    #         try:
+    #             image, label = sess.run([iterator.image, iterator.label])
+    #             print(image.shape, label.shape)
+    #         except tf.errors.OutOfRangeError:
+    #             break
 
