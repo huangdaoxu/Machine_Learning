@@ -48,7 +48,7 @@ class Ocr4LenCnnModel(object):
         num_correct, num_samples = 0, 0
         while True:
             try:
-                image, label = sess.run(iterator.image, iterator.label)
+                image, label = sess.run([iterator.image, iterator.label])
                 if image is None: break
                 correct_pred = sess.run(self.correct_prediction,
                                         feed_dict={self.x: image,
@@ -106,7 +106,7 @@ class Ocr4LenCnnModel(object):
                 sess.run(iterator.initializer,
                          feed_dict={iterator.filenames: [FLAGS.train_records_dir]})
                 while True:
-                    image, label = sess.run(iterator.image, iterator.label)
+                    image, label = sess.run([iterator.image, iterator.label])
                     if image is None: break
                     _ = sess.run(train_step, feed_dict={self.x: image,
                                                         self.y: label,

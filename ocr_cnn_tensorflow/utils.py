@@ -123,7 +123,7 @@ if __name__ == "__main__":
 
         while True:
             try:
-                image, label = sess.run(iterator.image, iterator.label)
+                image, label = sess.run([iterator.image, iterator.label])
                 print(image.shape, label.shape)
             except tf.errors.OutOfRangeError:
                 break
