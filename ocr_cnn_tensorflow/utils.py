@@ -18,7 +18,7 @@ src_data = number + alphabet + ALPHABET
 class BatchedInput(collections.namedtuple("BatchedInput",
                                           ("initializer",
                                            "image",
-                                           "label"
+                                           "label",
                                            "filenames"))):
     pass
 
