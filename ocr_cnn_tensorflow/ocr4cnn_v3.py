@@ -36,7 +36,7 @@ class Ocr4LenCnnModel(object):
         net = inception_v1(self.x, 4*num_classes)
         logits = tf.reshape(net, [-1, num_classes, 4])
 
-        tf.losses.sparse_softmax_cross_entropy(labels=y, logits=logits)
+        tf.losses.sparse_softmax_cross_entropy(labels=self.y, logits=logits)
         self.loss = tf.losses.get_total_loss(add_regularization_losses=True, name='total_loss')
 
         self.y_pred = tf.argmax(logits, 1)
@@ -70,7 +70,7 @@ class Ocr4LenCnnModel(object):
             raise ValueError("this is compute mode, please reconstruct model with is_training")
 
         dataset = DataIterator()
-        iterator = dataset.get_iterator(batch_size=32)
+        iterator = dataset.get_iterator(batch_size=batch_size)
 
         lr = tf.train.exponential_decay(
             learning_rate=learning_rate,
