@@ -170,8 +170,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/rnn_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="248">
-              <caret line="117" column="27" selection-start-line="117" selection-start-column="27" selection-end-line="117" selection-end-column="27" />
+            <state relative-caret-position="572">
+              <caret line="135" column="41" lean-forward="true" selection-start-line="135" selection-start-column="8" selection-end-line="135" selection-end-column="41" />
             </state>
           </provider>
         </entry>
@@ -920,8 +920,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/rnn_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="248">
-          <caret line="117" column="27" selection-start-line="117" selection-start-column="27" selection-end-line="117" selection-end-column="27" />
+        <state relative-caret-position="572">
+          <caret line="135" column="41" lean-forward="true" selection-start-line="135" selection-start-column="8" selection-end-line="135" selection-end-column="41" />
         </state>
       </provider>
     </entry>

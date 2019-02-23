@@ -106,12 +106,15 @@ class Ocr4LenCnnModel(object):
                 sess.run(iterator.initializer,
                          feed_dict={iterator.filenames: [FLAGS.train_records_dir]})
                 while True:
-                    image, label = sess.run([iterator.image, iterator.label])
-                    if image is None: break
-                    _ = sess.run(train_step, feed_dict={self.x: image,
-                                                        self.y: label,
-                                                        self.keep_prob: keep_prob,
-                                                        self.training: True})
+                    try:
+                        image, label = sess.run([iterator.image, iterator.label])
+                        if image is None: break
+                        _ = sess.run(train_step, feed_dict={self.x: image,
+                                                            self.y: label,
+                                                            self.keep_prob: keep_prob,
+                                                            self.training: True})
+                    except tf.errors.OutOfRangeError:
+                        break
 
                 if current_epoch % 10 == 0:
                     train_acc = self.check_accuracy(iterator, sess, "train")
