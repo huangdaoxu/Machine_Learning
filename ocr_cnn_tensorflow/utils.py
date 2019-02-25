@@ -43,9 +43,6 @@ class DataIterator(object):
         self.resized_image = tf.div(resized_image, 255.0)
 
     def __list_images(self, data_dir, unique_labels=src_data):
-        """
-        Get all the images and labels in directory
-        """
         file_path = []
         label_dict = {}
         for f in os.listdir(data_dir):
@@ -69,7 +66,6 @@ class DataIterator(object):
             label = [label_dict[c] for c in code]
             features = {}
             features['image'] = tf.train.Feature(bytes_list=tf.train.BytesList(value=[image.tobytes()]))
-            # 用int64来表达label
             features['label'] = tf.train.Feature(int64_list=tf.train.Int64List(value=label))
             tf_features = tf.train.Features(feature=features)
             tf_example = tf.train.Example(features=tf_features)
@@ -78,11 +74,9 @@ class DataIterator(object):
         writer.close()
 
     def pares_tf(self, example_proto):
-        # 定义解析的字典
         dics = {}
         dics['label'] = tf.FixedLenFeature(shape=[4], dtype=tf.int64)
         dics['image'] = tf.FixedLenFeature(shape=[], dtype=tf.string)
-        # 调用接口解析一行样本
         parsed_example = tf.parse_single_example(serialized=example_proto, features=dics)
         image = tf.decode_raw(parsed_example['image'], out_type=tf.float32)
         image = tf.reshape(image, shape=[224, 224, 3])

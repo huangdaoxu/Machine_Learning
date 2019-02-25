@@ -6,9 +6,8 @@ from ImageNet.GoogleNet import inception_v1
 
 
 class Ocr4LenCnnModel(object):
-    def __init__(self, is_training, model_path, ):
+    def __init__(self, is_training, ):
         self.is_training = is_training
-        self.model_path = model_path
         self.__build_model()
 
     @staticmethod
@@ -64,19 +63,18 @@ class Ocr4LenCnnModel(object):
         acc = float(num_correct) / num_samples
         return acc
 
-    def train_model(self, batch_size, decay_steps, keep_prob,
-                    epoch, learning_rate):
+    def train_model(self):
         if not self.is_training:
             raise ValueError("this is compute mode, please reconstruct model with is_training")
 
         dataset = DataIterator()
-        iterator = dataset.get_iterator(batch_size=batch_size)
+        iterator = dataset.get_iterator(batch_size=FLAGS.batch_size)
 
         lr = tf.train.exponential_decay(
-            learning_rate=learning_rate,
+            learning_rate=FLAGS.learning_rate,
             global_step=self.global_step,
-            decay_steps=decay_steps,
-            decay_rate=0.96,
+            decay_steps=FLAGS.decay_steps,
+            decay_rate=FLAGS.decay_rate,
             staircase=False,
             name='learning_rate'
         )
@@ -93,7 +91,7 @@ class Ocr4LenCnnModel(object):
             sess.run(tf.global_variables_initializer())
 
             saver = tf.train.Saver()
-            ckpt = tf.train.get_checkpoint_state(self.model_path)
+            ckpt = tf.train.get_checkpoint_state(FLAGS.model_path)
             if ckpt is not None:
                 path = ckpt.model_checkpoint_path
                 saver.restore(sess, path)
@@ -102,7 +100,7 @@ class Ocr4LenCnnModel(object):
             current_epoch += 1
 
             while True:
-                if current_epoch > epoch: break
+                if current_epoch > FLAGS.epochs: break
                 sess.run(iterator.initializer,
                          feed_dict={iterator.filenames: [FLAGS.train_records_dir]})
                 while True:
@@ -111,7 +109,7 @@ class Ocr4LenCnnModel(object):
                         if image is None: break
                         _ = sess.run(train_step, feed_dict={self.x: image,
                                                             self.y: label,
-                                                            self.keep_prob: keep_prob,
+                                                            self.keep_prob: FLAGS.keep_prob,
                                                             self.training: True})
                     except tf.errors.OutOfRangeError:
                         break
@@ -121,37 +119,11 @@ class Ocr4LenCnnModel(object):
                     val_acc = self.check_accuracy(iterator, sess, "test")
                     logging.info('epoch: {}, Train accuracy: {}, Val accuracy: {}'.format(current_epoch, train_acc, val_acc))
                     sess.run(tf.assign(self.global_step, current_epoch))
-                    saver.save(sess, self.model_path + 'points', global_step=current_epoch)
+                    saver.save(sess, FLAGS.model_path + 'points', global_step=current_epoch)
 
                 current_epoch += 1
 
-    def compute(self, picture=None, suffix=None):
-        if self.is_training:
-            raise ValueError("this is training mode, please reconstruct model without is_training")
-        with tf.Session() as sess:
-            if suffix == 'png':
-                image_decoded = tf.image.decode_png(picture, channels=PIC_CHANNELS)
-            elif suffix == 'jpg':
-                image_decoded = tf.image.decode_jpeg(picture, channels=PIC_CHANNELS)
-            elif suffix == 'bmp':
-                image_decoded = tf.image.decode_bmp(picture, channels=PIC_CHANNELS)
-            else:
-                raise ValueError("file format is not supported")
-            image_decoded = tf.cast(image_decoded, tf.float32)
-            resized_image = tf.image.resize_images(image_decoded, [PIC_HEIGHT, PIC_WIDTH])
-            resized_image = tf.div(resized_image, 255.0)
-            resized_image = sess.run(resized_image)
-
-        result = self.sess.run(self.y_pred, feed_dict={self.x: [resized_image],
-                                                       self.keep_prob: 1.0,
-                                                       self.training: False})
-
-        result_str = ''
-        for i in result[0]:
-            result_str += src_data[i]
-        return result_str
-
 
 if __name__ == "__main__":
-    cnn = Ocr4LenCnnModel(True, "./save/")
+    cnn = Ocr4LenCnnModel(True)
 
