@@ -10,20 +10,6 @@ class Ocr4LenCnnModel(object):
         self.is_training = is_training
         self.__build_model()
 
-    @staticmethod
-    def batch_norm(x, is_training, name):
-        bn = tf.layers.batch_normalization(
-            inputs=x,
-            axis=-1,
-            momentum=0.9,
-            epsilon=0.001,
-            center=True,
-            scale=True,
-            training=is_training,
-            name=name
-        )
-        return bn
-
     def __build_model(self):
         num_classes = len(src_data)
         self.x = tf.placeholder(tf.float32, shape=[None, PIC_HEIGHT, PIC_WIDTH, PIC_CHANNELS], name='x')
