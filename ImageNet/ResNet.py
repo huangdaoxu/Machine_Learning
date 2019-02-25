@@ -86,10 +86,10 @@ def resnet_152(inputs, training, num_classes):
     for _ in range(3):
         net = block_v1(net, 64, 1, training)
     net = block_v1(net, 128, 2, training)
-    for _ in range(3):
+    for _ in range(7):
         net = block_v1(net, 128, 1, training)
     net = block_v1(net, 256, 2, training)
-    for _ in range(22):
+    for _ in range(35):
         net = block_v1(net, 256, 1, training)
     net = block_v1(net, 512, 2, training)
     for _ in range(2):
