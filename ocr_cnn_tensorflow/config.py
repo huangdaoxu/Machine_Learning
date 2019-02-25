@@ -9,7 +9,7 @@ tf.app.flags.DEFINE_string("train_pic_dir", "/home/hdx/train4data/train", "pictu
 tf.app.flags.DEFINE_string("test_pic_dir", "/home/hdx/train4data/test", "picture dir")
 tf.app.flags.DEFINE_string("train_records_dir", "./train.tfrecords", "picture dir")
 tf.app.flags.DEFINE_string("test_records_dir", "./test.tfrecords", "picture dir")
-tf.app.flags.DEFINE_string("model_path", "./resource/save/", "model path")
+tf.app.flags.DEFINE_string("model_path", "./resource/save_v4/", "model path")
 
 tf.app.flags.DEFINE_integer("epochs", 200, "number of training epoch")
 tf.app.flags.DEFINE_integer("batch_size", 32, "batch size")

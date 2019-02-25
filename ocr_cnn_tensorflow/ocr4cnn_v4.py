@@ -2,7 +2,7 @@ import sys
 sys.path.append("../")
 
 from utils import *
-from ImageNet.GoogleNet import inception_v1
+from ImageNet.ResNet import resnet_50
 
 
 class Ocr4LenCnnModel(object):
@@ -32,7 +32,7 @@ class Ocr4LenCnnModel(object):
         self.global_step = tf.Variable(0, trainable=False)
         self.training = tf.placeholder(tf.bool, name='training')
 
-        net = inception_v1(self.x, 4*num_classes)
+        net = resnet_50(self.x, self.training, 4*num_classes)
         logits = tf.reshape(net, [-1, 4, num_classes])
 
         tf.losses.sparse_softmax_cross_entropy(labels=self.y, logits=logits)
