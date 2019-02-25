@@ -1,4 +1,4 @@
-from ocr4cnn_v3 import Ocr4LenCnnModel
+from ocr4cnn_v4 import Ocr4LenCnnModel
 
 
 if __name__ == '__main__':
